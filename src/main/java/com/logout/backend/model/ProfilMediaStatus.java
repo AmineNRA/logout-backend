@@ -1,11 +1,16 @@
 package com.logout.backend.model;
 
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
+
 import com.logout.backend.enums.Media;
 import com.logout.backend.enums.Status;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,9 +36,13 @@ public class ProfilMediaStatus {
     @Column(name = "EXTERNAL_ID")
     private Integer externalId;
 
+    @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(name = "MEDIA_TYPE")
     private Media mediaType;
 
+    @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     private Status status;
 
     @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST })

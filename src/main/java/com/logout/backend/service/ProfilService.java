@@ -15,6 +15,7 @@ import com.logout.backend.model.Profil;
 import com.logout.backend.repository.ProfilRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -49,6 +50,32 @@ public class ProfilService implements UserDetailsService {
                 .stream()
                 .map(profilDTOMapper::tDto)
                 .toList();
+    }
+
+    public ProfilDTO getProfil(Integer id) {
+        Profil profil = findProfil(id);
+        return profilDTOMapper.tDto(profil);
+    }
+
+    private Profil findProfil(Integer id) {
+        return profilRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Profil introuvable avec l'id : " + id));
+    }
+
+    @Transactional
+    public void updateProfil(Integer profilId, ProfilDTO profilDTO) {
+        Profil findProfil = findProfil(profilId);
+        if (!profilDTO.email().equals(findProfil.getEmail())
+                && profilRepository.existsByEmail(profilDTO.email())) {
+            throw new IllegalArgumentException("L'email existe déjà");
+        }
+        if (!profilDTO.pseudo().equals(findProfil.getPseudo())
+                && profilRepository.existsByPseudo(profilDTO.pseudo())) {
+            throw new IllegalArgumentException("Le pseudo existe déjà");
+        }
+        findProfil.setEmail(profilDTO.email());
+        findProfil.setPseudo(profilDTO.pseudo());
+        profilRepository.save(findProfil);
     }
 
     public void deleteProfil(Integer id) {

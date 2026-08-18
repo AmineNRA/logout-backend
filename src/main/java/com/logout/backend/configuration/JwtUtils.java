@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.logout.backend.model.Profil;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -24,10 +26,11 @@ public class JwtUtils {
     private long expirationTime;
 
     // --- Génération du Token ---
-    public String generateToken(String username) {
+    public String generateToken(Profil profil) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
-                .subject(username)
+                .subject(profil.getPseudo())
+                .claim("profilId", profil.getId())
                 .issuedAt(new Date(now))
                 .expiration(new Date(now + expirationTime))
                 .signWith(getSignKey())
@@ -69,5 +72,9 @@ public class JwtUtils {
     private SecretKey getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public Integer extractProfilId(String token) {
+        return extractClaim(token, claims -> claims.get("profilId", Integer.class));
     }
 }

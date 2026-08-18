@@ -1,8 +1,8 @@
 package com.logout.backend.enums;
 
 public enum Media {
-    MOVIE,
-    TV,
-    GAMES
+    movie,
+    tv,
+    games
 
 }

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,8 +46,10 @@ public class AuthController {
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(profil.getPseudo(), profil.getPassword()));
             if (authentication.isAuthenticated()) {
+                Profil currentProfil = profilRepository.findByPseudo(profil.getPseudo())
+                        .orElseThrow(() -> new UsernameNotFoundException("Profil introuvable"));
                 Map<String, Object> authData = new HashMap<>();
-                authData.put("token", jwtUtils.generateToken(profil.getPseudo()));
+                authData.put("token", jwtUtils.generateToken(currentProfil));
                 authData.put("type", "Bearer");
                 return ResponseEntity.ok(authData);
             }

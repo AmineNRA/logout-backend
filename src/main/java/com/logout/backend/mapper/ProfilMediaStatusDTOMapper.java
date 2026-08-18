@@ -11,4 +11,7 @@ public interface ProfilMediaStatusDTOMapper {
     @Mapping(target = "profilId", source = "profil.id")
     ProfilMediaStatusDTO tDto(ProfilMediaStatus profilMediaStatus);
 
+    @Mapping(target = "profil.id", source = "profilId")
+    ProfilMediaStatus tEntity(ProfilMediaStatusDTO profilMediaStatusDTO);
+
 }
