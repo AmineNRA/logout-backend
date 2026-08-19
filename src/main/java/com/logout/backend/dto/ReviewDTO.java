@@ -10,10 +10,10 @@ import com.logout.backend.enums.Media;
 
 public record ReviewDTO(
         Integer id,
-        String comment,
-        @Min(1) @Max(5) Integer rate,
+        @NotNull String comment,
+        @NotNull @Min(1) @Max(5) Integer rate,
         @NotNull Media mediaType,
-        @NotNull Integer externalId,
+        @NotNull Integer mediaId,
         Integer profilId,
         String profilPseudo,
         Date updated) {

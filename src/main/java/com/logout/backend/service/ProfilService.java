@@ -75,7 +75,6 @@ public class ProfilService implements UserDetailsService {
         }
         findProfil.setEmail(profilDTO.email());
         findProfil.setPseudo(profilDTO.pseudo());
-        profilRepository.save(findProfil);
     }
 
     public void deleteProfil(Integer id) {

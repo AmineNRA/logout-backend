@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,14 +28,15 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "PROFIL_MEDIA_STATUS")
+@Table(name = "PROFIL_MEDIA_STATUS", uniqueConstraints = @UniqueConstraint(columnNames = { "MEDIA_ID", "MEDIA_TYPE",
+        "PROFIL_ID" }))
 public class ProfilMediaStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "EXTERNAL_ID")
-    private Integer externalId;
+    @Column(name = "MEDIA_ID")
+    private Integer mediaId;
 
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)

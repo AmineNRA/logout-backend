@@ -33,8 +33,8 @@ public class ProfilMediaStatusController {
     private final JwtUtils jwtUtils;
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(path = "{id}")
-    public List<ProfilMediaStatusDTO> getProfilMediaStatus(@PathVariable Integer id, @RequestParam Status status,
+    @GetMapping()
+    public List<ProfilMediaStatusDTO> getProfilMediaStatus(@RequestParam Status status,
             @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.substring(7);
         Integer profilId = jwtUtils.extractProfilId(token);
@@ -54,13 +54,12 @@ public class ProfilMediaStatusController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping(path = "{id}")
-    public void updateProfilMediaStatus(@PathVariable Integer externalId,
+    public void updateProfilMediaStatus(@PathVariable Integer id,
             @Valid @RequestBody ProfilMediaStatusDTO profilMediaStatusDTO,
-            @RequestHeader("Autorization") String authHeader) {
+            @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.substring(7);
         Integer profilId = jwtUtils.extractProfilId(token);
-
-        profilMediaStatusService.updateProfilMediaStatus(profilId, externalId, profilMediaStatusDTO);
+        profilMediaStatusService.updateProfilMediaStatus(profilId, id, profilMediaStatusDTO);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

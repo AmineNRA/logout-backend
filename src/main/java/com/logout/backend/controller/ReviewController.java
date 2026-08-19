@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,10 +29,11 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final JwtUtils jwtUtils;
 
+    // ajouter un put
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(path = "{id}")
-    public List<ReviewDTO> getReviewsFromMedia(@PathVariable Integer id) {
-        return reviewService.getAllReviewOfMedia(id);
+    @GetMapping(path = "{mediaId}")
+    public List<ReviewDTO> getReviewsFromMedia(@PathVariable Integer mediaId) {
+        return reviewService.getAllReviewOfMedia(mediaId);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -44,6 +46,15 @@ public class ReviewController {
 
         reviewService.createReview(profilId, reviewDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping(path = "{id}")
+    public void updateReview(@PathVariable Integer id, @RequestBody ReviewDTO reviewDTO,
+            @RequestHeader("Authorization") String autHeader) {
+        String token = autHeader.substring(7);
+        Integer profilId = jwtUtils.extractProfilId(token);
+        reviewService.updateReview(id, profilId, reviewDTO);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

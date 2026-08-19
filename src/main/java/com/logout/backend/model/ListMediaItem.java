@@ -25,10 +25,10 @@ public class ListMediaItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "EXTERNAL_ID")
-    private Integer externalId;
+    @Column(name = "MEDIA_ID")
+    private Integer mediaId;
 
     @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     @JoinColumn(name = "LIST_ID")
-    private List List;
+    private List list;
 }

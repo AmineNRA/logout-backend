@@ -9,6 +9,8 @@ import com.logout.backend.model.Review;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
-    List<Review> findByExternalId(Integer id);
+    List<Review> findBymediaId(Integer id);
+
+    boolean existsByMediaIdAndProfilId(Integer mediaId, Integer profilId);
 
 }

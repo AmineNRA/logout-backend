@@ -20,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "REVIEW")
+@Table(name = "REVIEW", uniqueConstraints = @UniqueConstraint(columnNames = { "MEDIA_ID", "PROFIL_ID" }))
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,8 +46,8 @@ public class Review {
     @Column(name = "MEDIA_TYPE")
     private Media mediaType;
 
-    @Column(name = "EXTERNAL_ID")
-    private Integer externalId;
+    @Column(name = "MEDIA_ID")
+    private Integer mediaId;
 
     @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     @JoinColumn(name = "PROFIL_ID")

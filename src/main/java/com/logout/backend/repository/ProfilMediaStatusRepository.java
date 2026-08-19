@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.logout.backend.enums.Media;
 import com.logout.backend.enums.Status;
 import com.logout.backend.model.ProfilMediaStatus;
 
@@ -14,5 +15,7 @@ public interface ProfilMediaStatusRepository extends JpaRepository<ProfilMediaSt
 
     List<ProfilMediaStatus> findByProfilIdAndStatus(Integer profilId, Status status);
 
-    Optional<ProfilMediaStatus> findByExternalIdAndProfilId(Integer externalId, Integer profilId);
+    Optional<ProfilMediaStatus> findBymediaIdAndProfilId(Integer mediaId, Integer profilId);
+
+    boolean existsByMediaIdAndProfilIdAndMediaType(Integer mediaId, Integer profilId, Media mediaType);
 }

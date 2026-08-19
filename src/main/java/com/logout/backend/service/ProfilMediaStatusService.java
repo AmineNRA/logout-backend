@@ -1,5 +1,6 @@
 package com.logout.backend.service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -25,8 +26,16 @@ public class ProfilMediaStatusService {
     private final ProfilRepository profilRepository;
 
     public void createProfilMediaStatus(Integer profilId, ProfilMediaStatusDTO profilMediaStatusDTO) {
+
+        if (profilMediaStatusRepository.existsByMediaIdAndProfilIdAndMediaType(profilMediaStatusDTO.mediaId(), profilId,
+                profilMediaStatusDTO.mediaType())) {
+            throw new IllegalArgumentException("Le media est déjà dans votre liste");
+        }
+
         Profil profilProxy = profilRepository.getReferenceById(profilId);
+
         ProfilMediaStatus profilMediaStatus = profilMediaStatusDTOMapper.tEntity(profilMediaStatusDTO);
+
         profilMediaStatus.setProfil(profilProxy);
         profilMediaStatusRepository.save(profilMediaStatus);
     }
@@ -39,11 +48,16 @@ public class ProfilMediaStatusService {
     }
 
     @Transactional
-    public void updateProfilMediaStatus(Integer profilId, Integer externalId,
+    public void updateProfilMediaStatus(Integer profilId, Integer id,
             ProfilMediaStatusDTO profilMediaStatusDTO) {
-        ProfilMediaStatus findProfilMediaStatus = profilMediaStatusRepository.findByExternalIdAndProfilId(externalId,
-                profilId).orElseThrow(() -> new EntityNotFoundException("Le média est introuvable"));
-        findProfilMediaStatus.setStatus(profilMediaStatusDTO.status());
+        ProfilMediaStatus profilMediaStatusToUpdate = profilMediaStatusRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Statut introuvable"));
+
+        if (!profilMediaStatusToUpdate.getProfil().getId().equals(profilId)) {
+            throw new IllegalArgumentException("Vous n'êtes pas autorisé à modifier cet élément");
+        }
+
+        profilMediaStatusToUpdate.setStatus(profilMediaStatusDTO.status());
     }
 
     public void deleteProfilMediaStatus(Integer id) {
