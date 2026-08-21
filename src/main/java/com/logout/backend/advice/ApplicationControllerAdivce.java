@@ -1,15 +1,17 @@
 package com.logout.backend.advice;
 
-import java.util.stream.Collectors;
-
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.logout.backend.dto.ErrorEntity;
+import com.logout.backend.dto.error.ErrorEntity;
+import com.logout.backend.dto.error.ExpiredJwt;
+import com.logout.backend.dto.error.IllegalArgument;
+import com.logout.backend.dto.error.UsernameNotFound;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityNotFoundException;
 
 @RestControllerAdvice
@@ -21,14 +23,20 @@ public class ApplicationControllerAdivce {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ MethodArgumentNotValidException.class })
-    public ErrorEntity handleValidationException(MethodArgumentNotValidException exception) {
-        String errorMessage = exception.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .collect(Collectors.joining(", "));
+    @ExceptionHandler({ IllegalArgumentException.class })
+    public IllegalArgument handleIllegalArgument(IllegalArgumentException exception) {
+        return new IllegalArgument(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
+    }
 
-        return new ErrorEntity(HttpStatus.BAD_REQUEST.value(), errorMessage);
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ UsernameNotFoundException.class })
+    public UsernameNotFound handeUsernameNotFound(UsernameNotFoundException exception) {
+        return new UsernameNotFound(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler({ ExpiredJwtException.class })
+    public ExpiredJwt handleExpiredJwt(ExpiredJwtException exception) {
+        return new ExpiredJwt(HttpStatus.UNAUTHORIZED.value(), exception.getMessage());
     }
 }

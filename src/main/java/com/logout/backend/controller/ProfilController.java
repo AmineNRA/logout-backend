@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.logout.backend.configuration.JwtUtils;
 import com.logout.backend.dto.ProfilDTO;
 import com.logout.backend.service.ProfilService;
 
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class ProfilController {
 
     private final ProfilService profilService;
+    private final JwtUtils jwtUtils;
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
@@ -33,8 +36,16 @@ public class ProfilController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "{id}")
-    public ProfilDTO getProfilDTO(@PathVariable Integer id) {
+    public ProfilDTO getProfil(@PathVariable Integer id) {
         return profilService.getProfil(id);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(path = "/me")
+    public ProfilDTO getMineProfil(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.substring(7);
+        Integer profilId = jwtUtils.extractProfilId(token);
+        return profilService.getProfil(profilId);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

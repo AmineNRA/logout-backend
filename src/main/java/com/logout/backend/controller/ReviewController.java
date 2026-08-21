@@ -29,7 +29,6 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final JwtUtils jwtUtils;
 
-    // ajouter un put
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "{mediaId}")
     public List<ReviewDTO> getReviewsFromMedia(@PathVariable Integer mediaId) {

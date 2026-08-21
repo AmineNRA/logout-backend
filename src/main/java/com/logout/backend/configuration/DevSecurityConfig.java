@@ -18,10 +18,10 @@
 // public SecurityFilterChain devSecurityFilterChain(HttpSecurity http) throws
 // Exception {
 // http
-// .csrf(csrf -> csrf.disable()) // Désactive le CSRF pour les requêtes POST/PUT
+// .csrf(csrf -> csrf.disable())
 // via Thunder Client
 // .authorizeHttpRequests(auth -> auth
-// .anyRequest().permitAll() // Autorise toutes les routes sans authentification
+// .anyRequest().permitAll()
 // );
 // return http.build();
 // }

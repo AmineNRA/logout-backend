@@ -20,30 +20,10 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ProfilService implements UserDetailsService {
+public class ProfilService {
 
     private final ProfilRepository profilRepository;
     private final ProfilDTOMapper profilDTOMapper;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Profil profil = profilRepository.findByPseudo(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Profil introuvable avec le pseudo : " + username));
-        return User.builder()
-                .username(profil.getPseudo())
-                .password(profil.getPassword())
-                .authorities(Collections.emptyList())
-                .build();
-    }
-
-    public void createProfil(Profil profil) {
-        if (profilRepository.existsByEmail(profil.getEmail())) {
-            throw new IllegalArgumentException("Cet email est déjà utilisé");
-        } else if (profilRepository.existsByPseudo(profil.getPseudo())) {
-            throw new IllegalArgumentException("Ce pseudo est déjà utilisé");
-        }
-        profilRepository.save(profil);
-    }
 
     public List<ProfilDTO> getAllProfil() {
         return profilRepository.findAll()
@@ -75,6 +55,9 @@ public class ProfilService implements UserDetailsService {
         }
         findProfil.setEmail(profilDTO.email());
         findProfil.setPseudo(profilDTO.pseudo());
+        findProfil.setDescription(profilDTO.description());
+        findProfil.setProfilPicture(profilDTO.profilPicture());
+        profilRepository.save(findProfil);
     }
 
     public void deleteProfil(Integer id) {

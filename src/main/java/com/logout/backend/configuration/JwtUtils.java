@@ -25,7 +25,10 @@ public class JwtUtils {
     @Value("${app.expiration-time}")
     private long expirationTime;
 
-    // --- Génération du Token ---
+    @Value("${app.refreshExpirationDateInMs}")
+    private long refreshExpirationTime;
+
+    // --- Génération du Token et du Refresh Token ---
     public String generateToken(Profil profil) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
@@ -33,6 +36,17 @@ public class JwtUtils {
                 .claim("profilId", profil.getId())
                 .issuedAt(new Date(now))
                 .expiration(new Date(now + expirationTime))
+                .signWith(getSignKey())
+                .compact();
+    }
+
+    public String generateRefreshToken(Profil profil) {
+        long now = System.currentTimeMillis();
+        return Jwts.builder()
+                .subject(profil.getPseudo())
+                .claim("profilId", profil.getId())
+                .issuedAt(new Date(now))
+                .expiration(new Date(now + refreshExpirationTime))
                 .signWith(getSignKey())
                 .compact();
     }

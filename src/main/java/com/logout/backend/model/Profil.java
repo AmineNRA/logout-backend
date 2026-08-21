@@ -38,6 +38,11 @@ public class Profil {
     @Column(nullable = false)
     private String password;
 
+    private String description;
+
+    @Column(name = "PROFIL_PICTURE")
+    private String profilPicture;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private Date created;

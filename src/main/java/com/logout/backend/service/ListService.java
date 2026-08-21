@@ -26,16 +26,6 @@ public class ListService {
     private final ListMediaItemService listMediaItemService;
     private final ProfilRepository profilRepository;
 
-    // Je veux créer une liste --- Ok --- Test Ok
-    // Je veux ajouter un item à une liste --- Ok --- Test Ok
-    // Je veux afficher toutes les listes relié par l'id de l'utilisateur et le type
-    // de média --- Ok --- Test Ok
-    // Je veux afficher une liste avec tous les items --- Ok --- Test Ok
-    // Je veux modifier le nom d'une liste --- Ok --- Test Ok
-    // Je veux supprimer un item de la liste --- Ok --- Test Ok
-    // Je veux supprimer une liste avec tous les items de la liste --- Ok --- Test
-    // Ok
-
     public List<ListDTO> getAllListOfProfilIdAndMediaType(Integer profilId, Media mediaType) {
         if (!profilRepository.existsById(profilId)) {
             throw new IllegalArgumentException("Vous n'êtes pas autorisé à accéder aux listes");
